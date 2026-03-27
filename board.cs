@@ -8,6 +8,7 @@ public class Board
     public Board()
     {
         _board = new Gem?[Rows, Cols];
+        fillboard();
     }
 
     public void fillboard()
@@ -107,5 +108,8 @@ public class Board
         }
     }
 
+    public Gem?[,] GetBoard() => _board;
+    public int GetRows()      => Rows;
+    public int GetCols()      => Cols;
 
 }
