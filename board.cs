@@ -69,4 +69,34 @@ public class Board
             _board[row, col] = null;
         }
     }
+
+    //drop gems---gravity 
+    // It looks from the bottom and moves upward
+    // when it finds an empty cell it
+    // grabs the closest gem above and pulls it down
+    // then stops and moves to the next gem
+
+    public void dropGems()
+    {
+        for (int c = 0; c < Cols; c++)
+        {
+            for (int r = Rows - 1; r >= 0; r--)
+            {
+                if (_board[r, c] == null)
+                {
+                    for (int k = r - 1; k >= 0; k--)
+                    {
+                        if (_board[k, c] != null)
+                        {
+                            _board[r, c] = _board[k, c];
+                            _board[k, c] = null;
+
+                            _board[r, c]?.SetPos(r, c);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
