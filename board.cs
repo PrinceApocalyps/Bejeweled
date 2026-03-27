@@ -44,4 +44,29 @@ public class Board
 
         return false;
     }
+
+    public void swapGems(int[] a, int[] b)
+    {
+        (int r1, int c1) = (a[0], a[1]);
+        (int r2, int c2) = (b[0], b[1]);
+
+        //change the position of the gems on the board
+        (_board[r1,c1], _board[r2, c2]) = (_board[r2,c2], _board[r1,c1]);
+
+
+        //change the internal position of the gems after swap
+        _board[r1, c1]?.SetPos(r1,c1);
+        _board[r2, c2]?.SetPos(r2,c2);
+    }
+
+    public void removeGems(List<Gem> matchList)
+    {
+        foreach (var gem in matchList)
+        {
+            int[] pos = gem.get_pos();
+            (int row, int col) = (pos[0], pos[1]);
+
+            _board[row, col] = null;
+        }
+    }
 }
