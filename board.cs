@@ -17,13 +17,20 @@ public class Board
         {
             for(int c=0; c<Cols; c++)
             {
-                Gem.GemColor chosen;
-                int attempts = 0;
-                do
+
+                if(_board[r,c] is null)
                 {
-                    chosen = colors[_rng.Next(colors.Length)];
-                    attempts++;
-                } while(attempts<20&& WouldMatch(r,c,chosen));
+                    Gem.GemColor chosen;
+                    int attempts = 0;
+                    do
+                    {
+                        chosen = colors[_rng.Next(colors.Length)];
+                        attempts++;
+                    } while(attempts<20&& WouldMatch(r,c,chosen));
+
+                    _board[r, c] = new Gem(r, c, chosen);
+                }
+                
             }
         }
     }
@@ -99,4 +106,6 @@ public class Board
             }
         }
     }
+
+
 }
