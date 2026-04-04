@@ -1,22 +1,39 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
-Board GameBoard = new Board();
-
-var board = GameBoard.GetBoard();
-
-for (int r = 0; r < GameBoard.GetRows(); r++)
+class Program
+{
+    static void Main()
     {
-        for (int c = 0; c < GameBoard.GetCols(); c++)
+        Board GameBoard = new Board();
+        var board = GameBoard.GetBoard();
+
+        for (int r = 0; r < GameBoard.GetRows(); r++)
         {
-            var gem = board[r, c];
+            for (int c = 0; c < GameBoard.GetCols(); c++)
+            {
+                var gem = board[r, c];
 
-            string output = gem == null
-                ? "Empty"
-                : gem.GetColor().ToString();
+                string output = gem == null
+                    ? "Empty"
+                    : GetEmoji(gem.GetColor());
 
-            Console.Write($"{output,-8} "); // fixed width alignment
+                Console.Write($"{output,-2} ");
+            }
+
+            Console.WriteLine();
         }
-
-        Console.WriteLine();
     }
+
+    public static string GetEmoji(Gem.GemColor color)
+    {
+        return color switch
+        {
+            Gem.GemColor.Red => "🟥",
+            Gem.GemColor.Blue => "🟦",
+            Gem.GemColor.Green => "🟩",
+            Gem.GemColor.Yellow => "🟨",
+            Gem.GemColor.Purple => "🟪",
+            _ => "?"
+        };
+    }
+}
