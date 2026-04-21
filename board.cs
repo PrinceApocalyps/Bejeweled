@@ -1,89 +1,118 @@
 using System;
+
+/// <summary>
+/// Represents the 8x8 game board, managing gem placement, swapping, matching, and gravity.
+/// </summary>
 public class Board
 {
     private const int Rows = 8;
     private const int Cols = 8;
     private Gem?[,] _board;
     private readonly Random _rng = new();
+
+    /// <summary>
+    /// Initializes a new board and fills it with randomly colored gems,
+    /// ensuring no matches exist at the start.
+    /// </summary>
     public Board()
     {
         _board = new Gem?[Rows, Cols];
         fillboard();
     }
 
+    /// <summary>
+    /// Fills all empty cells on the board with randomly colored gems.
+    /// Attempts to avoid creating immediate 3-in-a-row matches during placement.
+    /// </summary>
     public void fillboard()
     {
         var colors = Enum.GetValues<Gem.GemColor>();
-        for(int r= 0; r< Rows; r++)
+        for (int r = 0; r < Rows; r++)
         {
-            for(int c=0; c<Cols; c++)
+            for (int c = 0; c < Cols; c++)
             {
-
-                if(_board[r,c] is null)
+                if (_board[r, c] is null)
                 {
                     Gem.GemColor chosen;
                     int attempts = 0;
+
+                    // Retry up to 20 times to find a color that doesn't form a match.
+                    // Falls through with whatever color was last picked if no valid one is found.
                     do
                     {
                         chosen = colors[_rng.Next(colors.Length)];
                         attempts++;
-                    } while(attempts<20&& WouldMatch(r,c,chosen));
+                    } while (attempts < 20 && WouldMatch(r, c, chosen));
 
                     _board[r, c] = new Gem(r, c, chosen);
                 }
-                
             }
         }
     }
 
+    /// <summary>
+    /// Checks whether placing a gem of the given color at (r, c) would
+    /// complete a horizontal or vertical 3-in-a-row match.
+    /// Only looks left and upward since the board is filled top-left to bottom-right.
+    /// </summary>
+    /// <param name="r">Row index of the candidate cell.</param>
+    /// <param name="c">Column index of the candidate cell.</param>
+    /// <param name="color">The color being considered for placement.</param>
+    /// <returns>True if placing this color would create a match; otherwise false.</returns>
     public bool WouldMatch(int r, int c, Gem.GemColor color)
     {
-        //Two to the left
-        if(c > 2 
-            && _board[r, c-1]?.GetColor() == color
-            && _board[r, c-2]?.GetColor() == color)
+        // Two to the left
+        if (c >= 2
+            && _board[r, c - 1]?.GetColor() == color
+            && _board[r, c - 2]?.GetColor() == color)
             return true;
 
-        //Two above
-        if(r>=2
-            && _board[r-1, c]?.GetColor() == color
-            && _board[r-2, c]?.GetColor() == color)
+        // Two above
+        if (r >= 2
+            && _board[r - 1, c]?.GetColor() == color
+            && _board[r - 2, c]?.GetColor() == color)
             return true;
 
         return false;
     }
 
+    /// <summary>
+    /// Swaps two gems on the board and updates each gem's internal position to match.
+    /// </summary>
+    /// <param name="a">Board coordinates [row, col] of the first gem.</param>
+    /// <param name="b">Board coordinates [row, col] of the second gem.</param>
     public void swapGems(int[] a, int[] b)
     {
         (int r1, int c1) = (a[0], a[1]);
         (int r2, int c2) = (b[0], b[1]);
 
-        //change the position of the gems on the board
-        (_board[r1,c1], _board[r2, c2]) = (_board[r2,c2], _board[r1,c1]);
+        // Swap the references in the board grid
+        (_board[r1, c1], _board[r2, c2]) = (_board[r2, c2], _board[r1, c1]);
 
-
-        //change the internal position of the gems after swap
-        _board[r1, c1]?.SetPos(r1,c1);
-        _board[r2, c2]?.SetPos(r2,c2);
+        // Sync each gem's stored position after the swap
+        _board[r1, c1]?.SetPos(r1, c1);
+        _board[r2, c2]?.SetPos(r2, c2);
     }
 
+    /// <summary>
+    /// Removes all gems in the match list from the board, leaving those cells empty (null).
+    /// </summary>
+    /// <param name="matchList">The list of matched gems to remove.</param>
     public void removeGems(List<Gem> matchList)
     {
         foreach (var gem in matchList)
         {
             int[] pos = gem.get_pos();
             (int row, int col) = (pos[0], pos[1]);
-
             _board[row, col] = null;
         }
     }
 
-    //drop gems---gravity 
-    // It looks from the bottom and moves upward
-    // when it finds an empty cell it
-    // grabs the closest gem above and pulls it down
-    // then stops and moves to the next gem
-
+    /// <summary>
+    /// Applies gravity by sliding gems downward into empty cells column by column.
+    /// Scans each column from the bottom up; when an empty cell is found, the closest
+    /// gem above it is pulled down to fill the gap.
+    /// </summary>
     public void dropGems()
     {
         for (int c = 0; c < Cols; c++)
@@ -92,15 +121,15 @@ public class Board
             {
                 if (_board[r, c] == null)
                 {
+                    // Search upward for the nearest gem to fall into this empty cell
                     for (int k = r - 1; k >= 0; k--)
                     {
                         if (_board[k, c] != null)
                         {
                             _board[r, c] = _board[k, c];
                             _board[k, c] = null;
-
                             _board[r, c]?.SetPos(r, c);
-                            break;
+                            break; // Move on to the next empty cell
                         }
                     }
                 }
@@ -108,8 +137,12 @@ public class Board
         }
     }
 
+    /// <summary>Returns the underlying 2D gem grid.</summary>
     public Gem?[,] GetBoard() => _board;
-    public int GetRows()      => Rows;
-    public int GetCols()      => Cols;
 
+    /// <summary>Returns the number of rows on the board.</summary>
+    public int GetRows() => Rows;
+
+    /// <summary>Returns the number of columns on the board.</summary>
+    public int GetCols() => Cols;
 }
