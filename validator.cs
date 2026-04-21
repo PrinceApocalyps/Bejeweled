@@ -39,4 +39,9 @@ public class Validator
 
         return false;
     }
+
+    public bool CheckPossibleMatch()
+    {
+        
+    }
 }

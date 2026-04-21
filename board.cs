@@ -116,6 +116,7 @@ public class Board
         }
     }
 
+    
     /// <summary>Returns the underlying 2D gem grid.</summary>
     public Gem?[,] GetBoard() => _board;
 
