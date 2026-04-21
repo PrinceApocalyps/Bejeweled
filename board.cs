@@ -120,14 +120,14 @@ public class Board
         Console.Write("  ");
         for (int c = 0; c < GetCols(); c++)
         {
-            Console.Write($"{c} ");
+            Console.Write($"{c}  ");
         }
         Console.WriteLine();
 
         for (int r = 0; r < GetRows(); r++)
         {
             // Print row number on the left
-            Console.Write($"{r} ");
+            Console.Write($"{r}  ");
 
             for (int c = 0; c < GetCols(); c++)
             {
