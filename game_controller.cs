@@ -35,6 +35,7 @@ public class Controller
                         game_board.dropGems();
                         game_board.fillboard();
                         game_board.PrintBoard();
+                        Console.WriteLine();
                     }
                 }
 
