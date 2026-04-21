@@ -135,7 +135,7 @@ public class Board
                 string output = gem == null
                     ? "⬛"
                     : GetEmoji(gem.GetColor());
-                Console.Write($"{output}");
+                Console.Write($"{output} ");
             }
             Console.WriteLine();
         }
