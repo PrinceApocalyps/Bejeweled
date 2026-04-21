@@ -32,8 +32,14 @@ public class Controller
                     while (validator.isMatch())
                     {
                         game_board.removeGems(validator.GetMatchList());
+                        game_board.PrintBoard();
+                        Console.WriteLine();
                         game_board.dropGems();
+                        game_board.PrintBoard();
+                        Console.WriteLine();
                         game_board.fillboard();
+                        game_board.PrintBoard();
+                        Console.WriteLine();
                         game_board.PrintBoard();
                         Console.WriteLine();
                     }
