@@ -117,7 +117,7 @@ public class Board
     public void PrintBoard()
     {
         // Print column numbers across the top
-        Console.Write("  ");
+        Console.Write("    ");
         for (int c = 0; c < GetCols(); c++)
         {
             Console.Write($"{c}  ");

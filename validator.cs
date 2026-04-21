@@ -77,8 +77,52 @@ public class Validator
         return false;
     }
 
-    // public bool CheckPossibleMatch()
-    // {
-        
-    // }
+    private bool HasAnyMatch()
+{
+    int rows = _board.GetLength(0);
+    int cols = _board.GetLength(1);
+    for (int r = 0; r < rows; r++)
+    {
+        for (int c = 0; c < cols; c++)
+        {
+            Gem.GemColor? color = _board[r, c]?.GetColor();
+            if (color is null) continue;
+            if (CheckMatch(r, c, color.Value)) return true;
+        }
+    }
+    return false;
+}
+
+private void HypoSwap(int r1, int c1, int r2, int c2)
+{
+    (_board[r1, c1], _board[r2, c2]) = (_board[r2, c2], _board[r1, c1]);
+}
+
+public bool CheckPossibleMatch()
+{
+    int rows = _board.GetLength(0);
+    int cols = _board.GetLength(1);
+
+    for (int r = 0; r < rows; r++)
+    {
+        for (int c = 0; c < cols; c++)
+        {
+            if (c + 1 < cols)
+            {
+                HypoSwap(r, c, r, c + 1);
+                bool hasMatch = HasAnyMatch(); // ← use helper instead of isMatch()
+                HypoSwap(r, c, r, c + 1);
+                if (hasMatch) return true;
+            }
+            if (r + 1 < rows)
+            {
+                HypoSwap(r, c, r + 1, c);
+                bool hasMatch = HasAnyMatch();
+                HypoSwap(r, c, r + 1, c);
+                if (hasMatch) return true;
+            }
+        }
+    }
+    return false;
+}
 }
