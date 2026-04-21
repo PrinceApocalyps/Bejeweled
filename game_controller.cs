@@ -28,6 +28,7 @@ public class Controller
                     game_board.swapGems(pos_gem1, pos_gem2);
                 }
                 game_board.removeGems(validator.GetMatchList());
+                game_board.dropGems();
 
 
             }
