@@ -1,5 +1,6 @@
 public class Validator
 {
+    private List<Gem> matchList;
     private readonly Gem?[,] _board;
 
     public Validator(Gem?[,] board)
@@ -7,12 +8,48 @@ public class Validator
         _board = board;
     }
     public bool CheckAdjacent(int[] gem1, int[] gem2)
-{
-    int rowDiff = Math.Abs(gem1[0] - gem2[0]);
-    int colDiff = Math.Abs(gem1[1] - gem2[1]);
-    return (rowDiff == 1 && colDiff == 0) 
-        || (rowDiff == 0 && colDiff == 1);
-}
+    {
+        int rowDiff = Math.Abs(gem1[0] - gem2[0]);
+        int colDiff = Math.Abs(gem1[1] - gem2[1]);
+        return (rowDiff == 1 && colDiff == 0) 
+            || (rowDiff == 0 && colDiff == 1);
+    }
+
+    public List<Gem> GetMatchList() => matchList;
+
+    public bool isMatch()
+    {
+        matchList = new List<Gem>(); // ← reset each call so previous matches don't carry over
+        int rows = _board.GetLength(0);
+        int cols = _board.GetLength(1);
+
+        for (int r = 0; r < rows; r++)
+        {
+            for (int c = 0; c < cols; c++)
+            {
+                Gem.GemColor? color = _board[r, c]?.GetColor();
+                if (color is null) continue;
+
+                if (CheckMatch(r, c, color.Value))
+                {
+                    // Add the matching gem and the two behind it
+                    matchList.Add(_board[r, c]!);
+                    if (c >= 2 && _board[r, c-1]?.GetColor() == color)
+                    {
+                        matchList.Add(_board[r, c-1]!);
+                        matchList.Add(_board[r, c-2]!);
+                    }
+                    if (r >= 2 && _board[r-1, c]?.GetColor() == color)
+                    {
+                        matchList.Add(_board[r-1, c]!);
+                        matchList.Add(_board[r-2, c]!);
+                    }
+                }
+            }
+        }
+
+        return matchList.Count > 0;
+    }
 
     /// <summary>
     /// Checks whether placing a gem of the given color at (r, c) would
@@ -40,8 +77,8 @@ public class Validator
         return false;
     }
 
-    public bool CheckPossibleMatch()
-    {
+    // public bool CheckPossibleMatch()
+    // {
         
-    }
+    // }
 }

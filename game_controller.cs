@@ -13,12 +13,33 @@ public class Controller
 
     public void GameLoop()
     {
-        UserSelection();
+        while (true)
+        {
+            game_board.PrintBoard();
+            Console.WriteLine("choose gem");
+            int[] pos_gem1 = UserSelection();
+            Console.WriteLine("swap gem with");
+            int[] pos_gem2 = UserSelection();
+            if(validator.CheckAdjacent(pos_gem1, pos_gem2))
+            {
+                game_board.swapGems(pos_gem1, pos_gem2);
+                if (!validator.isMatch())
+                {
+                    game_board.swapGems(pos_gem1, pos_gem2);
+                }
+                game_board.removeGems(validator.GetMatchList());
+
+
+            }
+
+
+        }
     }
-    
-    public void UserSelection()
+
+    public int[] UserSelection()
     {
         int r = 0, c = 0;
+        int[] selection = new int[2];
         bool valid = false;
 
         while (!valid)
@@ -38,8 +59,9 @@ public class Controller
             }
         }
 
-        currentSelection[0] = r;
-        currentSelection[1] = c;
+        selection[0] = r;
+        selection[1] = c;
+        return selection;
     }
 
     private bool TryReadInt(string prompt, out int value)

@@ -54,7 +54,6 @@ public class Board
     }
 
     
-
     /// <summary>
     /// Swaps two gems on the board and updates each gem's internal position to match.
     /// </summary>
