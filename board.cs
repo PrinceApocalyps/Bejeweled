@@ -115,8 +115,37 @@ public class Board
             }
         }
     }
+    public void PrintBoard()
+    {
+        for (int r = 0; r < GetRows(); r++)
+        {
+            for (int c = 0; c < GetCols(); c++)
+            {
+                var gem = _board[r, c]; // ← _board instead of board
 
-    
+                string output = gem == null
+                    ? "⬛"
+                    : GetEmoji(gem.GetColor());
+
+                Console.Write($"{output} ");
+            }
+
+            Console.WriteLine();
+        }
+    }
+    public static string GetEmoji(Gem.GemColor color)
+    {
+        return color switch
+        {
+            Gem.GemColor.Red => "🟥",
+            Gem.GemColor.Blue => "🟦",
+            Gem.GemColor.Green => "🟩",
+            Gem.GemColor.Yellow => "🟨",
+            Gem.GemColor.Purple => "🟪",
+            _ => "?"
+        };
+    }
+
     /// <summary>Returns the underlying 2D gem grid.</summary>
     public Gem?[,] GetBoard() => _board;
 
