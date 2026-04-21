@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography.X509Certificates;
 
 /// <summary>
 /// Represents the 8x8 game board, managing gem placement, swapping, matching, and gravity.
@@ -8,6 +9,7 @@ public class Board
     private const int Rows = 8;
     private const int Cols = 8;
     private Gem?[,] _board;
+    private Validator validator;
     private readonly Random _rng = new();
 
     /// <summary>
@@ -17,6 +19,7 @@ public class Board
     public Board()
     {
         _board = new Gem?[Rows, Cols];
+        validator = new Validator(_board);
         fillboard();
     }
 
@@ -42,7 +45,7 @@ public class Board
                     {
                         chosen = colors[_rng.Next(colors.Length)];
                         attempts++;
-                    } while (attempts < 20 && WouldMatch(r, c, chosen));
+                    } while (attempts < 20 && validator.CheckMatch(r, c, chosen));
 
                     _board[r, c] = new Gem(r, c, chosen);
                 }
@@ -50,31 +53,7 @@ public class Board
         }
     }
 
-    /// <summary>
-    /// Checks whether placing a gem of the given color at (r, c) would
-    /// complete a horizontal or vertical 3-in-a-row match.
-    /// Only looks left and upward since the board is filled top-left to bottom-right.
-    /// </summary>
-    /// <param name="r">Row index of the candidate cell.</param>
-    /// <param name="c">Column index of the candidate cell.</param>
-    /// <param name="color">The color being considered for placement.</param>
-    /// <returns>True if placing this color would create a match; otherwise false.</returns>
-    public bool WouldMatch(int r, int c, Gem.GemColor color)
-    {
-        // Two to the left
-        if (c >= 2
-            && _board[r, c - 1]?.GetColor() == color
-            && _board[r, c - 2]?.GetColor() == color)
-            return true;
-
-        // Two above
-        if (r >= 2
-            && _board[r - 1, c]?.GetColor() == color
-            && _board[r - 2, c]?.GetColor() == color)
-            return true;
-
-        return false;
-    }
+    
 
     /// <summary>
     /// Swaps two gems on the board and updates each gem's internal position to match.
