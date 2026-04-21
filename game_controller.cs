@@ -25,10 +25,19 @@ public class Controller
                 game_board.swapGems(pos_gem1, pos_gem2);
                 if (!validator.isMatch())
                 {
-                    game_board.swapGems(pos_gem1, pos_gem2);
+                    game_board.swapGems(pos_gem1, pos_gem2); // swap back if no match
                 }
-                game_board.removeGems(validator.GetMatchList());
-                game_board.dropGems();
+                else
+                {
+                    while (validator.isMatch())
+                    {
+                        game_board.removeGems(validator.GetMatchList());
+                        game_board.dropGems();
+                        game_board.fillboard();
+                        game_board.PrintBoard();
+                    }
+                }
+
 
 
             }
