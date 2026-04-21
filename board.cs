@@ -116,19 +116,27 @@ public class Board
     }
     public void PrintBoard()
     {
+        // Print column numbers across the top
+        Console.Write("  ");
+        for (int c = 0; c < GetCols(); c++)
+        {
+            Console.Write($"{c} ");
+        }
+        Console.WriteLine();
+
         for (int r = 0; r < GetRows(); r++)
         {
+            // Print row number on the left
+            Console.Write($"{r} ");
+
             for (int c = 0; c < GetCols(); c++)
             {
-                var gem = _board[r, c]; // ← _board instead of board
-
+                var gem = _board[r, c];
                 string output = gem == null
                     ? "⬛"
                     : GetEmoji(gem.GetColor());
-
-                Console.Write($"{output} ");
+                Console.Write($"{output}");
             }
-
             Console.WriteLine();
         }
     }
